@@ -39,7 +39,7 @@
 
 ### 5. Визуализация контекста системы — диаграмма С4
 
-[Текст ссылки](URL)
+[System context AS IS](https://editor.plantuml.com/uml/RP51Qy9048Nl-HNJq8E2cajFXOAjGdjGi5hFiibETM6p6sOcYfJ-zyucHMpnaYLltxnlPcVAOaZQscTtBbI-jGW7aOOVYuBCQR9tScZBbf6g60I3JAfO5uqt8TMCMQntPJ5x6A-Ij5qkYjgm8Acqcsc5SG5fqgJyR8N4CGnIs0ZohHwvdfjQ-V0MQmG-QsaDoP0FispJ_UvUOXkieVE0Rxdp8Nnb01VMm3JDJP-Ahp5zdxsF9-ue817IN1GzgAT1Cj8IWWaM22jqHmHhnC0dnHeO0qTYRUsQrwkQ-t4Lq8jAkxV85JtbIpIi5toD-HiqBmUsr9Yvyah3c5fTHPOzuUPzeTxlB5kZ_ts-VifPtpl30Osui1-bhXqUbLErHBgkVpmDs2tw9-fWQpIMYnCvqP8qQRUH3fUiwzvw6L5tbiQVOh2wqHy0)
 
 # Задание 2. Проектирование микросервисной архитектуры
 
