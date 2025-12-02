@@ -39,25 +39,21 @@
 
 ### 5. Визуализация контекста системы — диаграмма С4
 
-[System context AS IS](https://editor.plantuml.com/uml/RL0xQyD03DxzArJJmON4NZeL0Wccj4C3eMdcSB7Ls70l93cFVr-TNK8edSJfUvwMB8PaS3Pxw7rZXnQX4udyKbLapkMnbsuu38pK12_efMo2gw8rFcdcBAtj3rNzFD-arMxzKJd3WgIhVPqK5obZSiysI1nyaQncaEzqv3gtJjFXFJW4lghGGIBaJzbsV1KcnlzOIRgoDfnvv8C4IFqeM50q8XaP2C7u5WWRx4y8hH43tnGSC7eEnEhnADU8Y_mjt0BthnSf9e96VDrvJSiaQf4RMkHhDAm0toUgJ_Q9zlUNK_bwAiRGeP7U7sUfKeydLJO3aTxqZqCo6AMt7dejLc29last_040)
+[C4 Context AS IS](https://editor.plantuml.com/uml/RL0xQyD03DxzArJJmON4NZeL0Wccj4C3eMdcSB7Ls70l93cFVr-TNK8edSJfUvwMB8PaS3Pxw7rZXnQX4udyKbLapkMnbsuu38pK12_efMo2gw8rFcdcBAtj3rNzFD-arMxzKJd3WgIhVPqK5obZSiysI1nyaQncaEzqv3gtJjFXFJW4lghGGIBaJzbsV1KcnlzOIRgoDfnvv8C4IFqeM50q8XaP2C7u5WWRx4y8hH43tnGSC7eEnEhnADU8Y_mjt0BthnSf9e96VDrvJSiaQf4RMkHhDAm0toUgJ_Q9zlUNK_bwAiRGeP7U7sUfKeydLJO3aTxqZqCo6AMt7dejLc29last_040)
 
 # Задание 2. Проектирование микросервисной архитектуры
 
-В этом задании вам нужно предоставить только диаграммы в модели C4. Мы не просим вас отдельно
-описывать получившиеся микросервисы и то, как вы определили взаимодействия между компонентами To-Be
-системы. Если вы правильно подготовите диаграммы C4, они и так это покажут.
-
 **Диаграмма контейнеров (Containers)**
 
-Добавьте диаграмму.
+[C4 Containers TO BE](https://editor.plantuml.com/uml/hLF1Rjim3BtxApIZ1mTOx4jF0mOqQmTaHRfvSNiEP8br1CYIAj7DWc7_FafnQmVRfK1ziKtnlKVoKLS1kSUXrza7POGU9B0zeWkVgihpGzaft0_j4C0BQn0CbiBsbTFSHCmoeDIghQulbtKCFTnjgfu714-XtJKXk3BWInVvinfyiAQ8P1zP_a2ldDvDJ_fiRNjWuKZGdiM4V95bJVhTVR63aTmVYt2UVJhE5-ntnkXvLIjwsoeDA-Se_ovzC-wSLeAZieOqBoG4uJ_dAwtj8IGzXfRrtF2EgaWI-oWXuLa925JCkK9mFDQYJATXwIBeVGLksaAsf733aRSyG9nJRGDs7fgVcvb0WzR3A20fcN4ZHr96XZsgRl2fg7zxw3Z2WH-9ULL_Owl_rhycEaty7fu621ZOexSz4rhH8aJ6Fzaht-xhBwJ9oq73kKsds8oK80O4DQPV3ba1PLSoSjC1bJjucX6OOFqYhi4MzBWpSsDfVM85q-79arbubZtrse2HitxGnj6kx-_hfhfjVdmVeOdhZQ3TPXffCcyBN8uJYwuSl49u0KSNJwZjX9gcb_Jeej72o0X911u4g6UYI4P7NgAuejHukVu2)
 
 **Диаграмма компонентов (Components)**
 
-Добавьте диаграмму для каждого из выделенных микросервисов.
+[C4 Components TO BE]()
 
 **Диаграмма кода (Code)**
 
-Добавьте одну диаграмму или несколько.
+[C4 Code TO BE]()
 
 # Задание 3. Разработка ER-диаграммы
 
