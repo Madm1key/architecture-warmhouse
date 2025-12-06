@@ -1,0 +1,36 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+Person(user, "User", "Smart Home system user")
+
+System_Boundary(s, "Smart Home System") {
+  Container(mobileApp, "Mobile application", $descr="Allows user to manage smart home devices")
+  Container(spa, "Single-page application", $descr="Allows user to manage smart home devices")
+  Container_Boundary(app, "API Application") {
+    Component(dataProc, "Data Processing Service", $descr="Processes data received from smart home modules")
+    Component(auth, "Authentication Service", $descr="Handles user authentication and authorization")
+    Component(device, "Device Service", $descr="Manages smart home modules")
+    ComponentQueue(broker, "Message Broker", $descr="Facilitates communication between services and modules")
+    ComponentDb(userDb, "Database", $descr="Stores user data")
+    ComponentDb(deviceDb, "Database", $descr="Stores device data")
+  }
+}
+
+Container_Ext(module, "Smart Home module", $descr="Connectable module (e.g. temperature sensor)")
+
+Rel(user, mobileApp, "Uses")
+Rel(user, spa, "Uses")
+
+Rel(mobileApp, auth, "Registration and login", "HTTPS/JSON")
+Rel(spa, auth, "Registration and login", "HTTPS/JSON")
+Rel(mobileApp, device, "Manage devices", "HTTPS/JSON")
+Rel(spa, device, "Manage devices", "HTTPS/JSON")
+
+Rel(dataProc, module, "Reads from")
+
+Rel(dataProc, broker, "Writes to",  "HTTPS/JSON")
+Rel(device, broker, "Reades from", "HTTPS/JSON")
+
+Rel(auth, userDb, "Reads from and writes to", "SQL")
+Rel(device, deviceDb, "Reads from and writes to", "SQL")
+@enduml

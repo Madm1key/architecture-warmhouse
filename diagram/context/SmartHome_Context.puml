@@ -2,7 +2,7 @@
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
 
 Person(user, "User", "Smart Home system user")
-System(app, "Smart Home system", "Allows user to control temperature and receive data from sensors", $type="Go")
+System(app, "Smart Home system", "Allows user to control temperature and receive data from sensors")
 System_Ext(sensor, "Temperature sensor", $descr="Measures temperature")
 
 Rel(user, app, "Controls heating, recieves current temperature")
