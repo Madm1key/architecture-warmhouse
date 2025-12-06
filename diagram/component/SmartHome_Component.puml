@@ -1,5 +1,6 @@
 @startuml
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+LAYOUT_TOP_DOWN()
 
 Person(user, "User", "Smart Home system user")
 
@@ -29,8 +30,9 @@ Rel(spa, device, "Manage devices", "HTTPS/JSON")
 Rel(dataProc, module, "Reads from")
 
 Rel(dataProc, broker, "Writes to",  "HTTPS/JSON")
-Rel(device, broker, "Reades from", "HTTPS/JSON")
+Rel(device, broker, "Reads from", "HTTPS/JSON")
 
 Rel(auth, userDb, "Reads from and writes to", "SQL")
 Rel(device, deviceDb, "Reads from and writes to", "SQL")
+Rel(dataProc, deviceDb, "Reads from", "SQL")
 @enduml
