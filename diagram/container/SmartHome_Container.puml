@@ -4,13 +4,15 @@
 Person(user, "User", "Smart Home system user")
 
 System_Boundary(s, "Smart Home System") {
-  Container(mobileApp, "Mobile application", $descr="Allows user to manage smart home devices")
-  Container(spa, "Single-page application", $descr="Allows user to manage smart home devices")
-  ContainerDb(db, "Database", $descr="Stores user data and device configurations")
-  ContainerQueue(broker, "Message broker", $descr="")
+  Container(mobileApp, "Mobile application", $descr="Allows user to manage smart home modules")
+  Container(spa, "Single-page application", $descr="Allows user to manage smart home modules")
   Container(api, "API Application", $descr="Handles requests from clients")
+
+  ContainerDb(db, "Database", $descr="Stores user and device data")
+  ContainerQueue(broker, "Message broker", $descr="Facilitates communication between API and smart home modules")
 }
-Container_Ext(module, "Smart Home module", $descr="Connectable module (e.g. temperature sensor)")
+
+Container_Ext(module, "Smart Home module", $descr="Connectable module (e.g. heating control module)")
 
 Rel(user, mobileApp, "Uses")
 Rel(user, spa, "Uses")
@@ -19,8 +21,6 @@ Rel(mobileApp, api, "Sends requests to", "HTTPS/JSON")
 Rel(spa, api, "Sends requests to", "HTTPS/JSON")
 
 Rel_L(api, db, "Reads from and writes to", "SQL")
-
 Rel_D(api, broker, "Reads from and writes to", "HTTPS/JSON")
-
 Rel_R(api, module, "Sends commands to and receives data from")
 @enduml
