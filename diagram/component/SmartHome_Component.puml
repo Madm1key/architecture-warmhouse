@@ -4,18 +4,18 @@
 Person(user, "User", "Smart Home system user")
 
 System_Boundary(s, "Smart Home System") {
-  Container(mobileApp, "Mobile application", $descr="Allows user to manage smart home modules")
-  Container(spa, "Single-page application", $descr="Allows user to manage smart home modules")
+  Container(mobileApp, "Mobile application", $descr="Provides access to the smart home system")
+  Container(spa, "Single-page application", $descr="Provides access to the smart home system")
 
   Container_Boundary(app, "API Application") {
-    Component(dataProc, "Data Processing Service", $descr="Processes data received from smart home modules")
-    Component(auth, "Authentication Service", $descr="Handles user authentication and authorization")
-    Component(moduleService, "Module Service", $descr="Manages smart home modules")
+    Component(userService, "User Service", $descr="User registration, profile management, authentication")
+    Component(dataProcService, "Data Processing Service", $descr="Processes data received from smart home modules")
+    Component(deviceService, "Device Service", $descr="Registration module, send commands, receive status updates")
 
-    ComponentQueue(broker, "Message Broker", $descr="Facilitates communication between services and modules")
+    ComponentQueue(broker, "Message broker", $descr="Data transfer from plug-in modules")
 
     ComponentDb(userDb, "Database", $descr="Stores user data")
-    ComponentDb(moduleDb, "Database", $descr="Stores modules data")
+    ComponentDb(deviceDb, "Database", $descr="Stores device data")
   }
 
 }
@@ -25,17 +25,18 @@ Container_Ext(module, "Smart Home module", $descr="Connectable module (e.g. heat
 Rel(user, mobileApp, "Uses")
 Rel(user, spa, "Uses")
 
-Rel(mobileApp, auth, "Registration and login", "HTTPS/JSON")
-Rel(spa, auth, "Registration and login", "HTTPS/JSON")
-Rel(mobileApp, moduleService, "Manage modules", "HTTPS/JSON")
-Rel(spa, moduleService, "Manage modules", "HTTPS/JSON")
+Rel(mobileApp, userService, "Registration and login", "HTTPS/JSON")
+Rel(mobileApp, deviceService, "Manage devices", "HTTPS/JSON")
 
-Rel(dataProc, module, "Reads from")
-Rel(dataProc, broker, "Writes to",  "HTTPS/JSON")
-Rel(dataProc, moduleDb, "Reads from", "SQL")
+Rel(spa, userService, "Registration and login", "HTTPS/JSON")
+Rel(spa, deviceService, "Manage devices", "HTTPS/JSON")
 
-Rel(moduleService, broker, "Reads from", "HTTPS/JSON")
-Rel(moduleService, moduleDb, "Reads from and writes to", "SQL")
+Rel_L(dataProcService, module, "Reads")
+Rel_R(dataProcService, deviceService, "Uses")
 
-Rel(auth, userDb, "Reads from and writes to", "SQL")
+Rel(dataProcService, broker, "Writes",  "HTTPS/JSON")
+Rel(deviceService, broker, "Reads", "HTTPS/JSON")
+
+Rel(userService, userDb, "Reads/writes", "SQL")
+Rel(deviceService, deviceDb, "Reads/writes", "SQL")
 @enduml
