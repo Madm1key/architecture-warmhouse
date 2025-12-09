@@ -2,68 +2,26 @@
 package "Data Processing Service" {
 
   class DataProcessor {
-    + ProcessSensorData(data: SensorData): error
-    + ProcessModuleData(moduleID: string, data: []byte): error
-    + Start(): error
-    + Stop(): error
-  }
-
-  class SensorData {
-    + ModuleID: string
-    + DeviceID: string
-    + Timestamp: time.Time
-    + Type: string
-    + Value: float64
-    + Unit: string
-    + Validate(): error
-  }
-
-  class DataValidator {
-    + ValidateSensorData(data: SensorData): error
-    + ValidateDataFormat(data: []byte): error
-    + ValidateRange(value: float64, dataType: string): error
+    + ProcessModuleData(moduleId: string, deviceId: string)
   }
 
   class MessageBroker {
-    + Publish(topic: string, message: []byte): error
-    + Subscribe(topic: string, handler: MessageHandler): error
-    + Close(): error
-  }
-
-  class DeviceService {
-    + GetDeviceStatus(deviceID: string): (DeviceStatus, error)
-    + UpdateDeviceData(deviceID: string, data: SensorData): error
-    + SendCommand(deviceID: string, command: Command): error
+    + Publish(topic: string, message: string)
+    + Subscribe(topic: string, handler: MessageHandler)
   }
 
   interface MessageHandler {
-    + Handle(message: []byte): error
-  }
-
-  class DataAggregator {
-    - cache: Cache
-    + AggregateData(data: []SensorData): AggregatedData
-    + GetStatistics(deviceID: string, period: TimePeriod): Statistics
-  }
-
-  class AggregatedData {
-    + DeviceID: string
-    + Period: TimePeriod
-    + AverageValue: float64
-    + MinValue: float64
-    + MaxValue: float64
+    + Handle(message: string)
   }
 
 }
 
-DataProcessor --> MessageBroker : uses
-DataProcessor --> DeviceService : uses
-DataProcessor --> DataValidator : uses
-DataProcessor --> SensorData : processes
-DataProcessor ..|> MessageHandler : implements
-DataProcessor --> DataAggregator : uses
+class DeviceService {
+  + GetDevices(): []Device
+}
 
-DataAggregator --> SensorData : aggregates
-DataAggregator --> AggregatedData : produces
+DataProcessor --> MessageBroker : uses
+DataProcessor -right-> DeviceService : uses
+DataProcessor ..|> MessageHandler : implements
 
 @enduml
