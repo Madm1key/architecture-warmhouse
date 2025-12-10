@@ -1,8 +1,10 @@
 @startuml
 package com.smarthome.device {
+  enum "DeviceStatus" as DS
+
   DeviceController --> DeviceService : uses
   DeviceService --> DeviceRepository : uses
   DeviceRepository --> Device : manages
-  Device *-- DeviceStatus
+  Device *-- DS
 }
 @enduml
