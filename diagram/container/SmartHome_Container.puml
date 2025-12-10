@@ -9,7 +9,6 @@ System_Boundary(s, "Smart Home System") {
   Container(api, "API Application", $descr="Processes user requests, manages plug-in modules, collects information from modules")
 
   ContainerDb(db, "Database", $descr="Stores user and device data")
-  ContainerQueue(broker, "Message broker", $descr="Data transfer from plug-in modules")
 }
 
 Container_Ext(module, "Smart Home module", $descr="Connectable module (e.g. heating control module)")
@@ -21,6 +20,5 @@ Rel(mobileApp, api, "Sends requests to", "HTTPS/JSON")
 Rel(spa, api, "Sends requests to", "HTTPS/JSON")
 
 Rel_L(api, db, "Reads/writes", "SQL")
-Rel_D(api, broker, "Reads/writes", "HTTPS/JSON")
 Rel_R(api, module, "Sends commands, receives data")
 @enduml

@@ -4,39 +4,32 @@
 Person(user, "User", "Smart Home system user")
 
 System_Boundary(s, "Smart Home System") {
-  Container(mobileApp, "Mobile application", $descr="Provides access to the smart home system")
-  Container(spa, "Single-page application", $descr="Provides access to the smart home system")
+  Container(client, "Client Application", $descr="Mobile application, single-page application")
 
   Container_Boundary(app, "API Application") {
     Component(userService, "User Service", $descr="User registration, profile management, authentication")
-    Component(dataProcService, "Data Processing Service", $descr="Processes data received from smart home modules")
+    Component(moduleService, "Module Service", $descr="Reading measurements, sending control commands")
     Component(deviceService, "Device Service", $descr="Registration module, send commands, receive status updates")
-
-    ComponentQueue(broker, "Message broker", $descr="Data transfer from plug-in modules")
 
     ComponentDb(userDb, "Database", $descr="Stores user data")
     ComponentDb(deviceDb, "Database", $descr="Stores device data")
+    ComponentDb(moduleDb, "Database", $descr="Stores measurements")
   }
 
 }
 
 Container_Ext(module, "Smart Home module", $descr="Connectable module (e.g. heating control module)")
 
-Rel(user, mobileApp, "Uses")
-Rel(user, spa, "Uses")
+Rel(user, client, "Uses")
 
-Rel(mobileApp, userService, "Registration and login", "HTTPS/JSON")
-Rel(mobileApp, deviceService, "Manage devices", "HTTPS/JSON")
+Rel(client, userService, "Registration and login", "HTTPS/JSON")
+Rel(client, deviceService, "Manage devices", "HTTPS/JSON")
+Rel(client, moduleService, "Reading measurements, sending control commands", "HTTPS/JSON")
 
-Rel(spa, userService, "Registration and login", "HTTPS/JSON")
-Rel(spa, deviceService, "Manage devices", "HTTPS/JSON")
-
-Rel_L(dataProcService, module, "Reads")
-Rel_R(dataProcService, deviceService, "Uses")
-
-Rel(dataProcService, broker, "Writes",  "HTTPS/JSON")
-Rel(deviceService, broker, "Reads", "HTTPS/JSON")
+Rel_L(moduleService, module, "Reads")
+Rel_Neighbor(moduleService, deviceService, "Uses")
 
 Rel(userService, userDb, "Reads/writes", "SQL")
 Rel(deviceService, deviceDb, "Reads/writes", "SQL")
+Rel(moduleService, moduleDb, "Reads/writes", "SQL")
 @enduml

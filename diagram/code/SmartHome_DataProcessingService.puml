@@ -1,27 +1,11 @@
 @startuml
 package "Data Processing Service" {
-
-  class DataProcessor {
-    + ProcessModuleData(moduleId: string, deviceId: string)
-  }
-
-  class MessageBroker {
-    + Publish(topic: string, message: string)
-    + Subscribe(topic: string, handler: MessageHandler)
-  }
-
-  interface MessageHandler {
-    + Handle(message: string)
-  }
-
+  interface "ModuleConnector" as MC
+  class "ModuleConnectorImpl" as MCI
+  MCI .up.> MC : implements
+  ModuleService --> MC : uses
+  ModuleController --> ModuleService : uses
+  ModuleService --> DeviceMeasurementRepository : uses
+  DeviceMeasurementRepository --> DeviceMesurement : manages
 }
-
-class DeviceService {
-  + GetDevices(): []Device
-}
-
-DataProcessor --> MessageBroker : uses
-DataProcessor -right-> DeviceService : uses
-DataProcessor ..|> MessageHandler : implements
-
 @enduml

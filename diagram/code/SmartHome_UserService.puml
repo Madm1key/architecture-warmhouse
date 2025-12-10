@@ -1,48 +1,8 @@
 @startuml
 package "User Service" {
-
-  class UserController {
-    +RegisterUser(request: RegisterRequest): Response
-    +LoginUser(request: LoginRequest): Response
-    +GetUser(userId: int): Response
-    +UpdateUser(userId: int, request: UpdateRequest): Response
-    +DeleteUser(userId: int): Response
-  }
-
-  class UserService {
-    +Register(username: string, email: string, password: string): User
-    +Authenticate(username: string, password: string): Token
-    +GetUser(userId: int): User
-    +UpdateUser(userId: int, data: UserData): User
-    +DeleteUser(userId: int): bool
-  }
-
-  class UserRepository {
-    +FindById(id: int): User
-    +Save(user: User): User
-    +Update(user: User): User
-    +Delete(id: int): bool
-  }
-
-  class User {
-    -id: int
-    -username: string
-    -passwordHash: string
-    -email: string
-    +GetId(): int
-    +GetUsername(): string
-    +GetEmail(): string
-  }
-
-  class AuthService {
-    +HashPassword(password: string): string
-    +VerifyPassword(password: string, hash: string): bool
-  }
-
   UserController --> UserService : uses
   UserService --> UserRepository : uses
   UserService --> AuthService : uses
   UserRepository --> User : manages
-
 }
 @enduml

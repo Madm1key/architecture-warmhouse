@@ -1,31 +1,8 @@
 @startuml
-class DeviceService {
-  +RegisterDevice(device: Device)
-  +DeleteDevice(deviceId: string)
-  +SendCommand(deviceId: string, command: Command)
-  +GetDevice(deviceId: string): Device
-  +GetDevices(): []Device
+package DeviceController {
+  DeviceController --> DeviceService : uses
+  DeviceService --> DeviceRepository : uses
+  DeviceRepository --> Device : manages
+  Device *-- DeviceStatus
 }
-
-class Device {
-  -id: string
-  -name: string
-  -type: string
-  -location: string
-  -status: DeviceStatus
-}
-
-class Command {
-  -parameters: map[string]string
-}
-
-class DeviceStatus {
-  -online: bool
-  -lastSeen: time.Time
-  -state: map[string]interface{}
-}
-
-DeviceService "1" *-- "*" Device
-DeviceService "1" *-- "*" Command
-Device "1" *-- "1" DeviceStatus
 @enduml
