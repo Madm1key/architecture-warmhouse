@@ -1,0 +1,237 @@
+openapi: 3.1.0
+
+info:
+  title: SmartHome
+  version: 0.0.1
+
+tags:
+  - name: User
+  - name: Device
+  - name: Location
+
+paths:
+  /api/v1/user:
+    post:
+      tags:
+        - User
+      summary: Create user.
+      description: Create new user.
+      operationId: createUser
+      requestBody:
+        description: Creat user.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ManageUser'
+        required: true
+      responses:
+        201:
+          description: User successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        400:
+          description: Invalid name supplied.
+        422:
+          description: Validation exception.
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+
+  /api/v1/user/{id}:
+    get:
+      tags:
+        - User
+      summary: Get user by ID.
+      description: Retrieve user information by user ID.
+      operationId: getUserById
+      parameters:
+        - name: id
+          in: path
+          description: User ID.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Returns user.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        400:
+          description: Invalid ID supplied.
+        401:
+          description: Unauthorized.
+        403:
+          description: Forbidden.
+        404:
+          description: User not found.
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+    put:
+      tags:
+        - User
+      summary: Update user.
+      description: Update user by ID.
+      operationId: updateUserById
+      parameters:
+        - name: id
+          in: path
+          description: User ID.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Update user by ID.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ManageUser'
+        required: true
+      responses:
+        200:
+          description: User successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        400:
+          description: Invalid email supplied.
+        401:
+          description: Unauthorized.
+        403:
+          description: Forbidden.
+        404:
+          description: User not found.
+        422:
+          description: Validation exception.
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+
+  /api/v1/login:
+    post:
+      tags:
+        - User
+      summary: User login.
+      description: Authenticate user and return a token.
+      operationId: loginUser
+      requestBody:
+        description: User login credentials.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserLogin"
+        required: true
+      responses:
+        200:
+          description: Successful login.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserToken"
+        400:
+          description: Invalid username/password supplied.
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+
+components:
+  schemas:
+    ManageUser:
+      required:
+        - username
+        - email
+        - password
+      type: object
+      properties:
+        username:
+          type: string
+          examples: [ ivan ]
+        email:
+          type: string
+          format: email
+          examples: [ ivan@examples.com ]
+        password:
+          type: string
+          format: password
+          examples: [ P@ssw0rd ]
+    User:
+      required:
+        - id
+        - username
+        - email
+        - created_at
+        - updated_at
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          examples: [ e7848c4c-432f-42f7-9c98-cd45836be071 ]
+        username:
+          type: string
+          examples: [ ivan ]
+        email:
+          type: string
+          format: email
+          examples: [ ivan@examples.com ]
+        created_at:
+          type: string
+          format: date-time
+          examples: [ 2024-06-01T12:00:00Z ]
+        updated_at:
+          type: string
+          format: date-time
+          examples: [ 2024-06-01T12:00:00Z ]
+
+    UserLogin:
+      required:
+        - username
+        - password
+      type: object
+      properties:
+        username:
+          type: string
+          examples: [ ivan ]
+        password:
+          type: string
+          format: password
+          examples: [ P@ssw0rd ]
+    UserToken:
+      required:
+        - token
+      type: object
+      properties:
+        token:
+          type: string
+          examples: [ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... ]
+
+    Error:
+      required:
+        - code
+        - message
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          examples: [ 1 ]
+        message:
+          type: string
+          examples: [ Error message ]
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  responses:
+    UnexpectedError:
+      description: Unexpected error.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
