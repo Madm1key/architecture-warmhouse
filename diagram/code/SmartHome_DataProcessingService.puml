@@ -1,5 +1,5 @@
 @startuml
-package "Data Processing Service" {
+package com.smarthome.module {
   interface "ModuleConnector" as MC
   class "ModuleConnectorImpl" as MCI
   MCI .up.> MC : implements

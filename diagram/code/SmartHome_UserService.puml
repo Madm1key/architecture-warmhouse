@@ -1,8 +1,9 @@
 @startuml
-package "User Service" {
+package com.smarthome.user {
   UserController --> UserService : uses
   UserService --> UserRepository : uses
   UserService --> AuthService : uses
+  AuthService -left-> UserRepository : uses
   UserRepository --> User : manages
 }
 @enduml

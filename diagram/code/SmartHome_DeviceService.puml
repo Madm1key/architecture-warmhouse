@@ -1,5 +1,5 @@
 @startuml
-package DeviceController {
+package com.smarthome.device {
   DeviceController --> DeviceService : uses
   DeviceService --> DeviceRepository : uses
   DeviceRepository --> Device : manages
