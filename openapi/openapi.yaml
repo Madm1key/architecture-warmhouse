@@ -6,8 +6,10 @@ info:
   version: 0.0.1
 
 tags:
+  - name: Authorization
   - name: User
   - name: Device
+  - name: DeviceType
   - name: Location
 
 paths:
@@ -33,9 +35,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
         400:
-          description: Invalid name supplied.
+          $ref: "#/components/responses/400BadRequest"
         422:
-          description: Validation exception.
+          $ref: "#/components/responses/422ValidationException"
         default:
           $ref: "#/components/responses/UnexpectedError"
 
@@ -56,13 +58,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/User"
         400:
-          description: Invalid ID supplied.
+          $ref: "#/components/responses/400BadRequest"
         401:
-          description: Unauthorized.
+          $ref: "#/components/responses/401Unauthorized"
         403:
-          description: Forbidden.
+          $ref: "#/components/responses/403Forbidden"
         404:
-          description: User not found.
+          $ref: "#/components/responses/404NotFound"
         default:
           $ref: "#/components/responses/UnexpectedError"
       security:
@@ -90,15 +92,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
         400:
-          description: Invalid email supplied.
+          $ref: "#/components/responses/400BadRequest"
         401:
-          description: Unauthorized.
+          $ref: "#/components/responses/401Unauthorized"
         403:
-          description: Forbidden.
+          $ref: "#/components/responses/403Forbidden"
         404:
-          description: User not found.
+          $ref: "#/components/responses/404NotFound"
         422:
-          description: Validation exception.
+          $ref: "#/components/responses/422ValidationException"
         default:
           $ref: "#/components/responses/UnexpectedError"
       security:
@@ -115,11 +117,11 @@ paths:
         204:
           description: User successfully deleted.
         400:
-          description: Invalid ID supplied.
+          $ref: "#/components/responses/400BadRequest"
         401:
-          description: Unauthorized.
+          $ref: "#/components/responses/401Unauthorized"
         403:
-          description: Forbidden.
+          $ref: "#/components/responses/403Forbidden"
         default:
           $ref: "#/components/responses/UnexpectedError"
       security:
@@ -128,7 +130,7 @@ paths:
   /api/v1/login:
     post:
       tags:
-        - User
+        - Authorization
       summary: User login.
       description: Authenticate user and return a token.
       operationId: loginUser
@@ -147,14 +149,14 @@ paths:
               schema:
                 $ref: "#/components/schemas/UserToken"
         400:
-          description: Invalid username/password supplied.
+          $ref: "#/components/responses/400BadRequest"
         default:
           $ref: "#/components/responses/UnexpectedError"
 
   /api/v1/device-types:
     post:
       tags:
-        - Device
+        - DeviceType
       summary: Create device type.
       description: Create device type.
       operationId: createDeviceType
@@ -173,16 +175,20 @@ paths:
               schema:
                 $ref: "#/components/schemas/DeviceType"
         400:
-          description: Invalid name supplied.
+          $ref: "#/components/responses/400BadRequest"
+        401:
+          $ref: "#/components/responses/401Unauthorized"
+        403:
+          $ref: "#/components/responses/403Forbidden"
         422:
-          description: Validation exception.
+          $ref: "#/components/responses/422ValidationException"
         default:
           $ref: "#/components/responses/UnexpectedError"
       security:
         - bearerAuth: [ ]
     get:
       tags:
-        - Device
+        - DeviceType
       summary: Get all device types.
       description: Get list of device types.
       operationId: getDevicesTypes
@@ -196,7 +202,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/DeviceType"
         401:
-          description: Unauthorized.
+          $ref: "#/components/responses/401Unauthorized"
         default:
           $ref: "#/components/responses/UnexpectedError"
       security:
@@ -226,19 +232,27 @@ paths:
               schema:
                 $ref: "#/components/schemas/Device"
         400:
-          description: Invalid name supplied.
+          $ref: "#/components/responses/400BadRequest"
         401:
-          description: Unauthorized.
+          $ref: "#/components/responses/401Unauthorized"
+        403:
+          $ref: "#/components/responses/403Forbidden"
+        404:
+          $ref: "#/components/responses/404NotFound"
         422:
-          description: Validation exception.
+          $ref: "#/components/responses/422ValidationException"
         default:
           $ref: "#/components/responses/UnexpectedError"
+      security:
+        - bearerAuth: [ ]
     get:
       tags:
         - Device
       summary: Get all user devices.
       description: Get list of all user devices.
       operationId: getDevices
+      parameters:
+        - $ref: "#/components/parameters/UUID"
       responses:
         200:
           description: Returns list of all user devices.
@@ -248,24 +262,190 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Device"
+        400:
+          $ref: "#/components/responses/400BadRequest"
+        401:
+          $ref: "#/components/responses/401Unauthorized"
+        403:
+          $ref: "#/components/responses/403Forbidden"
+        404:
+          $ref: "#/components/responses/404NotFound"
+        422:
+          $ref: "#/components/responses/422ValidationException"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+      security:
+        - bearerAuth: [ ]
 
-  /api/v1/users/{id}/devices/{id}:
+  /api/v1/users/{userId}/devices/{deviceId}:
     get:
       tags:
         - Device
       summary: Get device.
       description: Get user device.
       operationId: getDevice
+      parameters:
+        - name: userId
+          in: path
+          description: UUID (e.g. User ID)
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: deviceId
+          in: path
+          description: UUID (e.g. User ID)
+          required: true
+          schema:
+            type: string
+            format: uuid
       responses:
         200:
-
+          description: Return device.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Device"
+        400:
+          $ref: "#/components/responses/400BadRequest"
+        401:
+          $ref: "#/components/responses/401Unauthorized"
+        403:
+          $ref: "#/components/responses/403Forbidden"
+        404:
+          $ref: "#/components/responses/404NotFound"
+        422:
+          $ref: "#/components/responses/422ValidationException"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+      security:
+        - bearerAuth: [ ]
+    put:
+      tags:
+        - Device
+      summary: Update device.
+      description: Update user device.
+      operationId: updateDevice
+      parameters:
+        - name: userId
+          in: path
+          description: UUID (e.g. User ID)
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: deviceId
+          in: path
+          description: UUID (e.g. User ID)
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Device successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Device"
+        400:
+          $ref: "#/components/responses/400BadRequest"
+        401:
+          $ref: "#/components/responses/401Unauthorized"
+        403:
+          $ref: "#/components/responses/403Forbidden"
+        404:
+          $ref: "#/components/responses/404NotFound"
+        422:
+          $ref: "#/components/responses/422ValidationException"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+      security:
+        - bearerAuth: [ ]
     delete:
       tags:
         - Device
-      summary: deleteDevice
+      summary: Delete device.
       description: Delete device.
+      operationId: deleteDevice
+      parameters:
+        - name: userId
+          in: path
+          description: UUID (e.g. User ID)
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: deviceId
+          in: path
+          description: UUID (e.g. User ID)
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        204:
+          description: Device successfully deleted.
+        400:
+          $ref: "#/components/responses/400BadRequest"
+        401:
+          $ref: "#/components/responses/401Unauthorized"
+        403:
+          $ref: "#/components/responses/403Forbidden"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+      security:
+        - bearerAuth: [ ]
 
-
+  /api/v1/users/{userId}/devices/{deviceId}/command:
+    post:
+      tags:
+        - Device
+      summary: Send command.
+      description: Send command to device.
+      operationId: sendCommand
+      requestBody:
+        description: Command.
+        content:
+          application/json:
+            schema:
+              required:
+                - command
+              type: object
+              properties:
+                command:
+                  type: string
+        required: true
+      parameters:
+        - name: userId
+          in: path
+          description: UUID (e.g. User ID)
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: deviceId
+          in: path
+          description: UUID (e.g. User ID)
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        204:
+          description: Command successfully sent.
+        400:
+          $ref: "#/components/responses/400BadRequest"
+        401:
+          $ref: "#/components/responses/401Unauthorized"
+        403:
+          $ref: "#/components/responses/403Forbidden"
+        404:
+          $ref: "#/components/responses/404NotFound"
+        422:
+          $ref: "#/components/responses/422ValidationException"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
 
 components:
   schemas:
@@ -466,6 +646,16 @@ components:
       bearerFormat: JWT
 
   responses:
+    400BadRequest:
+      description: Bad request.
+    401Unauthorized:
+      description: Unauthorized.
+    403Forbidden:
+      description: Forbidden.
+    422ValidationException:
+      description: Validation exception.
+    404NotFound:
+      description: Not found.
     UnexpectedError:
       description: Unexpected error.
       content:
