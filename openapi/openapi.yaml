@@ -65,6 +65,8 @@ paths:
           description: User not found.
         default:
           $ref: "#/components/responses/UnexpectedError"
+      security:
+        - bearerAuth: [ ]
     put:
       tags:
         - User
@@ -99,6 +101,8 @@ paths:
           description: Validation exception.
         default:
           $ref: "#/components/responses/UnexpectedError"
+      security:
+        - bearerAuth: [ ]
     delete:
       tags:
         - User
@@ -118,6 +122,8 @@ paths:
           description: Forbidden.
         default:
           $ref: "#/components/responses/UnexpectedError"
+      security:
+        - bearerAuth: [ ]
 
   /api/v1/login:
     post:
@@ -145,13 +151,66 @@ paths:
         default:
           $ref: "#/components/responses/UnexpectedError"
 
-  /api/v1/devices:
+  /api/v1/device-types:
+    post:
+      tags:
+        - Device
+      summary: Create device type.
+      description: Create device type.
+      operationId: createDeviceType
+      requestBody:
+        description: Create device type.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ManageDeviceType"
+        required: true
+      responses:
+        201:
+          description: Device type successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeviceType"
+        400:
+          description: Invalid name supplied.
+        422:
+          description: Validation exception.
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+      security:
+        - bearerAuth: [ ]
+    get:
+      tags:
+        - Device
+      summary: Get all device types.
+      description: Get list of device types.
+      operationId: getDevicesTypes
+      responses:
+        200:
+          description: Returns list of devices types.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DeviceType"
+        401:
+          description: Unauthorized.
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+      security:
+        - bearerAuth: [ ]
+
+  /api/v1/users/{id}/devices:
     post:
       tags:
         - Device
       summary: Create device.
       description: Create device.
       operationId: createDevice
+      parameters:
+        - $ref: "#/components/parameters/UUID"
       requestBody:
         description: Create device.
         content:
@@ -161,13 +220,15 @@ paths:
         required: true
       responses:
         201:
-          description: Device successfully registered.
+          description: Device type successfully created.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Device"
         400:
           description: Invalid name supplied.
+        401:
+          description: Unauthorized.
         422:
           description: Validation exception.
         default:
@@ -175,22 +236,36 @@ paths:
     get:
       tags:
         - Device
-      summary: Get all devices.
-      description: Get list of devices.
+      summary: Get all user devices.
+      description: Get list of all user devices.
       operationId: getDevices
       responses:
         200:
-          description: Returns list of devices.
+          description: Returns list of all user devices.
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: "#/components/schemas/Device"
-        401:
-          description: Unauthorized.
-        default:
-          $ref: "#/components/responses/UnexpectedError"
+
+  /api/v1/users/{id}/devices/{id}:
+    get:
+      tags:
+        - Device
+      summary: Get device.
+      description: Get user device.
+      operationId: getDevice
+      responses:
+        200:
+
+    delete:
+      tags:
+        - Device
+      summary: deleteDevice
+      description: Delete device.
+
+
 
 components:
   schemas:
@@ -319,6 +394,48 @@ components:
         status:
           type: string
           enum: [ ENABLED, DISABLED ]
+        created_at:
+          type: string
+          format: date-time
+          examples: [ 2024-06-01T12:00:00Z ]
+        updated_at:
+          type: [ string, "null" ]
+          format: date-time
+          examples: [ 2024-06-01T12:00:00Z ]
+
+    ManageDeviceType:
+      required:
+        - name
+        - external_module_id
+      type: object
+      properties:
+        name:
+          type: string
+          examples: [ Thermostat ]
+        external_module_id:
+          type: string
+          format: uuid
+          examples: [ e7848c4c-432f-42f7-9c98-cd45836be071 ]
+    DeviceType:
+      required:
+        - id
+        - name
+        - external_module_id
+        - created_at
+        - updated_at
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          examples: [ d290f1ee-6c54-4b01-90e6-d701748f0851 ]
+        name:
+          type: string
+          examples: [ Living Room Thermostat ]
+        external_module_id:
+          type: string
+          format: uuid
+          examples: [ e7848c4c-432f-42f7-9c98-cd45836be071 ]
         created_at:
           type: string
           format: date-time

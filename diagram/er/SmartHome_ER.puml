@@ -37,7 +37,7 @@ entity device_type {
   PK(id) : uuid <<generated>>
   --
   name : varchar(255) <<unique, not null>>
-  FK(external_module_id) : uuid <<not null>>
+  external_module_id : uuid <<not null>>
   created_at : timestamp <<not null>>
   updated_at : timestamp
 }
