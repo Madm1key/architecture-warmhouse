@@ -28,7 +28,7 @@ entity location {
   PK(id) : uuid <<generated>>
   --
   name : varchar(255) <<unique, not null>>
-  FK(user_id) : uuid <<not null>>
+  FK(owner_id) : uuid <<not null>>
   created_at : timestamp <<not null>>
   updated_at : timestamp
 }
