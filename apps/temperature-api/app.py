@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from datetime import datetime
+from datetime import datetime, timezone
 import random
 
 app = FastAPI()
@@ -12,7 +12,7 @@ async def get_temperature(location: str):
     return {
         "value": get_temperature(),
         "unit": "°C",
-        "timestamp": datetime.now(),
+        "timestamp": get_now(),
         "location": location,
         "status": "active",
         "sensor_id": sensor_id,
@@ -25,7 +25,7 @@ async def get_location(id: str):
     return {
         "value": get_temperature(),
         "unit": "°C",
-        "timestamp": datetime.now(),
+        "timestamp": get_now(),
         "location": get_location(id),
         "status": "active",
         "sensor_id": id,
@@ -53,3 +53,6 @@ def get_location(id: str):
 
 def get_temperature():
     return random.uniform(-30, 30)
+
+def get_now():
+    return datetime.now(timezone.utc)
