@@ -40,7 +40,7 @@
 
 ### 5. Визуализация контекста системы — диаграмма С4
 
-[C4 Context AS IS](diagram/context/SmartHome_Context.puml)
+[C4 Context TO BE](diagram/context/SmartHome_Context.puml)
 
 # Задание 2. Проектирование микросервисной архитектуры
 
