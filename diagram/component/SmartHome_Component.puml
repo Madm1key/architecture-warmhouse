@@ -5,31 +5,23 @@ Person(user, "User", "Smart Home system user")
 
 System_Boundary(s, "Smart Home System") {
   Container(client, "Client Application", $descr="Mobile application, single-page application")
+  Container(gateway, "API Gateway", $descr="Handles routing, authentication, rate limiting")
 
-  Container_Boundary(app, "API Application") {
-    Component(userService, "User Service", $descr="User registration, profile management, authentication")
-    Component(moduleService, "Module Service", $descr="Reading measurements, sending control commands")
-    Component(deviceService, "Device Service", $descr="Registration module, send commands, receive status updates")
-
+  Container_Boundary(app, "User Service") {
+    Component(userController, "User Controller", $descr="User registration, profile management")
+    Component(authController, "Authentication Controller", $descr="Handles user authentication")
+    Component(locationController, "Location Controller", $descr="Manages user locations")
     ComponentDb(userDb, "Database", $descr="Stores user data")
-    ComponentDb(deviceDb, "Database", $descr="Stores device data")
-    ComponentDb(moduleDb, "Database", $descr="Stores measurements")
   }
-
 }
 
-Container_Ext(module, "Smart Home module", $descr="Connectable module (e.g. heating control module)")
-
 Rel(user, client, "Uses")
+Rel(client, gateway, "Send requests", "HTTPS/JSON")
 
-Rel(client, userService, "Registration and login", "HTTPS/JSON")
-Rel(client, deviceService, "Manage devices", "HTTPS/JSON")
-Rel(client, moduleService, "Reading measurements, sending control commands", "HTTPS/JSON")
-
-Rel_L(moduleService, module, "Reads")
-Rel_Neighbor(moduleService, deviceService, "Uses")
-
-Rel(userService, userDb, "Reads/writes", "SQL")
-Rel(deviceService, deviceDb, "Reads/writes", "SQL")
-Rel(moduleService, moduleDb, "Reads/writes", "SQL")
+Rel(gateway, userController, "Registration and login", "HTTPS/JSON")
+Rel(gateway, authController, "Authentication", "HTTPS/JSON")
+Rel(gateway, locationController, "Manages user locations", "HTTPS/JSON")
+Rel(userController, userDb, "Reads/writes", "SQL")
+Rel(authController, userDb, "Reads", "SQL")
+Rel(locationController, userDb, "Reads/writes", "SQL")
 @enduml

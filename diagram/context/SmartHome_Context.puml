@@ -2,9 +2,9 @@
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
 
 Person(user, "User", "Smart Home system user")
-System(app, "Smart Home system", "Allows user to control temperature and receive data from sensors")
+System(app, "Smart Home system", "Processes user requests, manages plug-in modules, collects information from modules")
 System_Ext(sensor, "Temperature sensor", $descr="Measures temperature")
 
-Rel(user, app, "Controls heating, recieves current temperature")
-Rel(app, sensor, "Uses")
+Rel(user, app, "Uses")
+Rel(app, sensor, "Sends commands, receives data")
 @enduml
