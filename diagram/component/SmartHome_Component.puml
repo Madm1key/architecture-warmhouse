@@ -1,0 +1,27 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+Person(user, "User", "Smart Home system user")
+
+System_Boundary(s, "Smart Home System") {
+  Container(client, "Client Application", $descr="Mobile application, single-page application")
+  Container(gateway, "API Gateway", $descr="Handles routing, authentication, rate limiting")
+
+  Container_Boundary(app, "User Service") {
+    Component(userController, "User Controller", $descr="User registration, profile management")
+    Component(authController, "Authentication Controller", $descr="Handles user authentication")
+    Component(locationController, "Location Controller", $descr="Manages user locations")
+    ComponentDb(userDb, "Database", $descr="Stores user data")
+  }
+}
+
+Rel(user, client, "Uses")
+Rel(client, gateway, "Send requests", "HTTPS/JSON")
+
+Rel(gateway, userController, "Registration and login", "HTTPS/JSON")
+Rel(gateway, authController, "Authentication", "HTTPS/JSON")
+Rel(gateway, locationController, "Manages user locations", "HTTPS/JSON")
+Rel(userController, userDb, "Reads/writes", "SQL")
+Rel(authController, userDb, "Reads", "SQL")
+Rel(locationController, userDb, "Reads/writes", "SQL")
+@enduml

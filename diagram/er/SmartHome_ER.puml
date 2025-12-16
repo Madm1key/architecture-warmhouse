@@ -1,0 +1,59 @@
+@startuml
+!define PK(x) <u>x</u>
+!define FK(x) <i>x</i>
+
+entity user {
+  PK(id) : uuid <<generated>>
+  --
+  username : varchar(255) <<unique, not null>>
+  email : varchar(255) <<unique, not null>>
+  password_hash : varchar(255) <<not null>>
+  created_at : timestamp <<not null>>
+  updated_at : timestamp
+}
+
+entity device {
+  PK(id) : uuid <<generated>>
+  --
+  name : varchar(255) <<unique, not null>>
+  FK(owner_id) : uuid <<not null>>
+  FK(device_type_id) : uuid <<not null>>
+  FK(location_id) : uuid <<not null>>
+  status : varchar(50) <<not null>>
+  created_at : timestamp <<not null>>
+  updated_at : timestamp
+}
+
+entity location {
+  PK(id) : uuid <<generated>>
+  --
+  name : varchar(255) <<unique, not null>>
+  FK(owner_id) : uuid <<not null>>
+  created_at : timestamp <<not null>>
+  updated_at : timestamp
+}
+
+entity device_type {
+  PK(id) : uuid <<generated>>
+  --
+  name : varchar(255) <<unique, not null>>
+  external_module_id : uuid <<not null>>
+  created_at : timestamp <<not null>>
+  updated_at : timestamp
+}
+
+entity device_measurement {
+  PK(id) : uuid <<generated>>
+  --
+  FK(device_id) : uuid <<not null>>
+  unit : varchar(100) <<not null>>
+  value : float <<nul null>>
+  created_at : timestamp <<not null>>
+ }
+
+user ||--o{ device : owns
+user ||--o{ location : has
+device_type ||--o{ device : is a
+location ||--o{ device : contains
+device ||--o{ device_measurement : records
+@enduml

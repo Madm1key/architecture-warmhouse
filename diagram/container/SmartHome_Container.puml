@@ -1,0 +1,33 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(user, "User", "Smart Home system user")
+
+System_Boundary(s, "Smart Home System") {
+  Container(client, "Client Application", $descr="Mobile application, single-page application")
+  Container(gateway, "API Gateway", $descr="Handles routing, authentication, rate limiting")
+  Container(userService, "User Service", $descr="User registration, profile management, authentication")
+  Container(moduleService, "Module Service", $descr="Reading measurements, sending control commands")
+  Container(deviceService, "Device Service", $descr="Registration module, send commands, receive status updates")
+
+  ContainerDb(userDb, "Database", $descr="Stores user data")
+  ContainerDb(deviceDb, "Database", $descr="Stores device data")
+  ContainerDb(moduleDb, "Database", $descr="Stores measurements")
+}
+
+Container_Ext(module, "Smart Home module", $descr="Connectable module (e.g. heating control module)")
+
+Rel(user, client, "Uses")
+
+Rel(client, gateway, "Send requests", "HTTPS/JSON")
+Rel(gateway, userService, "Registration and login", "HTTPS/JSON")
+Rel(gateway, deviceService, "Manage devices", "HTTPS/JSON")
+Rel(gateway, moduleService, "Reading measurements, sending control commands", "HTTPS/JSON")
+
+Rel_L(moduleService, module, "Reads, send commands")
+Rel_Neighbor(moduleService, deviceService, "Uses")
+
+Rel(userService, userDb, "Reads/writes", "SQL")
+Rel(deviceService, deviceDb, "Reads/writes", "SQL")
+Rel(moduleService, moduleDb, "Reads/writes", "SQL")
+@enduml

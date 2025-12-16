@@ -1,0 +1,969 @@
+openapi: 3.1.0
+
+info:
+  title: SmartHome
+  description: SmartHome API.
+  version: 0.0.1
+
+tags:
+  - name: Authorization
+  - name: User
+  - name: Device
+  - name: DeviceType
+  - name: Location
+
+paths:
+  /api/v1/users:
+    post:
+      tags:
+        - User
+      summary: Create user.
+      description: Create new user.
+      operationId: createUser
+      requestBody:
+        description: Creat user.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ManageUser'
+        required: true
+      responses:
+        201:
+          description: User successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        400:
+          $ref: "#/components/responses/400BadRequest"
+        422:
+          $ref: "#/components/responses/422ValidationException"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+
+  /api/v1/users/{id}:
+    get:
+      tags:
+        - User
+      summary: Get user by ID.
+      description: Retrieve user information by user ID.
+      operationId: getUserById
+      parameters:
+        - $ref: "#/components/parameters/UUID"
+      responses:
+        200:
+          description: Returns user.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        400:
+          $ref: "#/components/responses/400BadRequest"
+        401:
+          $ref: "#/components/responses/401Unauthorized"
+        403:
+          $ref: "#/components/responses/403Forbidden"
+        404:
+          $ref: "#/components/responses/404NotFound"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+      security:
+        - bearerAuth: [ ]
+    put:
+      tags:
+        - User
+      summary: Update user.
+      description: Update user by ID.
+      operationId: updateUserById
+      parameters:
+        - $ref: "#/components/parameters/UUID"
+      requestBody:
+        description: Update user by ID.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ManageUser'
+        required: true
+      responses:
+        200:
+          description: User successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        400:
+          $ref: "#/components/responses/400BadRequest"
+        401:
+          $ref: "#/components/responses/401Unauthorized"
+        403:
+          $ref: "#/components/responses/403Forbidden"
+        404:
+          $ref: "#/components/responses/404NotFound"
+        422:
+          $ref: "#/components/responses/422ValidationException"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+      security:
+        - bearerAuth: [ ]
+    delete:
+      tags:
+        - User
+      summary: Delete user.
+      description: Delete user.
+      operationId: deleteUserById
+      parameters:
+        - $ref: "#/components/parameters/UUID"
+      responses:
+        204:
+          description: User successfully deleted.
+        400:
+          $ref: "#/components/responses/400BadRequest"
+        401:
+          $ref: "#/components/responses/401Unauthorized"
+        403:
+          $ref: "#/components/responses/403Forbidden"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+      security:
+        - bearerAuth: [ ]
+
+  /api/v1/login:
+    post:
+      tags:
+        - Authorization
+      summary: User login.
+      description: Authenticate user and return a token.
+      operationId: loginUser
+      requestBody:
+        description: User login credentials.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserLogin"
+        required: true
+      responses:
+        200:
+          description: Successful login.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserToken"
+        400:
+          $ref: "#/components/responses/400BadRequest"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+
+  /api/v1/device-types:
+    post:
+      tags:
+        - DeviceType
+      summary: Create device type.
+      description: Create device type.
+      operationId: createDeviceType
+      requestBody:
+        description: Create device type.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ManageDeviceType"
+        required: true
+      responses:
+        201:
+          description: Device type successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeviceType"
+        400:
+          $ref: "#/components/responses/400BadRequest"
+        401:
+          $ref: "#/components/responses/401Unauthorized"
+        403:
+          $ref: "#/components/responses/403Forbidden"
+        422:
+          $ref: "#/components/responses/422ValidationException"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+      security:
+        - bearerAuth: [ ]
+    get:
+      tags:
+        - DeviceType
+      summary: Get all device types.
+      description: Get list of device types.
+      operationId: getDevicesTypes
+      responses:
+        200:
+          description: Returns list of devices types.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DeviceType"
+        401:
+          $ref: "#/components/responses/401Unauthorized"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+      security:
+        - bearerAuth: [ ]
+
+  /api/v1/device-types/{id}:
+    delete:
+      tags:
+        - DeviceType
+      summary: Delete device type.
+      description: Delete device type by ID.
+      operationId: deleteDeviceType
+      parameters:
+        - $ref: "#/components/parameters/UUID"
+      responses:
+        204:
+          description: Device type successfully deleted.
+        400:
+          $ref: "#/components/responses/400BadRequest"
+        401:
+          $ref: "#/components/responses/401Unauthorized"
+        403:
+          $ref: "#/components/responses/403Forbidden"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+      security:
+        - bearerAuth: [ ]
+
+  /api/v1/users/{id}/devices:
+    post:
+      tags:
+        - Device
+      summary: Create device.
+      description: Create device.
+      operationId: createDevice
+      parameters:
+        - $ref: "#/components/parameters/UUID"
+      requestBody:
+        description: Create device.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ManageDevice"
+        required: true
+      responses:
+        201:
+          description: Device type successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Device"
+        400:
+          $ref: "#/components/responses/400BadRequest"
+        401:
+          $ref: "#/components/responses/401Unauthorized"
+        403:
+          $ref: "#/components/responses/403Forbidden"
+        404:
+          $ref: "#/components/responses/404NotFound"
+        422:
+          $ref: "#/components/responses/422ValidationException"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+      security:
+        - bearerAuth: [ ]
+    get:
+      tags:
+        - Device
+      summary: Get all user devices.
+      description: Get list of all user devices.
+      operationId: getDevices
+      parameters:
+        - $ref: "#/components/parameters/UUID"
+      responses:
+        200:
+          description: Returns list of all user devices.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Device"
+        400:
+          $ref: "#/components/responses/400BadRequest"
+        401:
+          $ref: "#/components/responses/401Unauthorized"
+        403:
+          $ref: "#/components/responses/403Forbidden"
+        404:
+          $ref: "#/components/responses/404NotFound"
+        422:
+          $ref: "#/components/responses/422ValidationException"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+      security:
+        - bearerAuth: [ ]
+
+  /api/v1/users/{userId}/devices/{deviceId}:
+    get:
+      tags:
+        - Device
+      summary: Get device.
+      description: Get user device.
+      operationId: getDevice
+      parameters:
+        - name: userId
+          in: path
+          description: UUID (e.g. User ID)
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: deviceId
+          in: path
+          description: UUID (e.g. User ID)
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Return device.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Device"
+        400:
+          $ref: "#/components/responses/400BadRequest"
+        401:
+          $ref: "#/components/responses/401Unauthorized"
+        403:
+          $ref: "#/components/responses/403Forbidden"
+        404:
+          $ref: "#/components/responses/404NotFound"
+        422:
+          $ref: "#/components/responses/422ValidationException"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+      security:
+        - bearerAuth: [ ]
+    put:
+      tags:
+        - Device
+      summary: Update device.
+      description: Update user device.
+      operationId: updateDevice
+      parameters:
+        - name: userId
+          in: path
+          description: UUID (e.g. User ID)
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: deviceId
+          in: path
+          description: UUID (e.g. User ID)
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Device successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Device"
+        400:
+          $ref: "#/components/responses/400BadRequest"
+        401:
+          $ref: "#/components/responses/401Unauthorized"
+        403:
+          $ref: "#/components/responses/403Forbidden"
+        404:
+          $ref: "#/components/responses/404NotFound"
+        422:
+          $ref: "#/components/responses/422ValidationException"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+      security:
+        - bearerAuth: [ ]
+    delete:
+      tags:
+        - Device
+      summary: Delete device.
+      description: Delete device.
+      operationId: deleteDevice
+      parameters:
+        - name: userId
+          in: path
+          description: UUID (e.g. User ID)
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: deviceId
+          in: path
+          description: UUID (e.g. User ID)
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        204:
+          description: Device successfully deleted.
+        400:
+          $ref: "#/components/responses/400BadRequest"
+        401:
+          $ref: "#/components/responses/401Unauthorized"
+        403:
+          $ref: "#/components/responses/403Forbidden"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+      security:
+        - bearerAuth: [ ]
+
+  /api/v1/users/{userId}/devices/{deviceId}/command:
+    post:
+      tags:
+        - Device
+      summary: Send command.
+      description: Send command to device.
+      operationId: sendCommand
+      parameters:
+        - name: userId
+          in: path
+          description: UUID (e.g. User ID)
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: deviceId
+          in: path
+          description: UUID (e.g. User ID)
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Command.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Command"
+        required: true
+      responses:
+        204:
+          description: Command successfully sent.
+        400:
+          $ref: "#/components/responses/400BadRequest"
+        401:
+          $ref: "#/components/responses/401Unauthorized"
+        403:
+          $ref: "#/components/responses/403Forbidden"
+        404:
+          $ref: "#/components/responses/404NotFound"
+        422:
+          $ref: "#/components/responses/422ValidationException"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+      security:
+        - bearerAuth: [ ]
+
+  /api/v1/users/{userId}/devices/{deviceId}/measurements:
+    get:
+      tags:
+        - Device
+      summary: Get device measurements.
+      description: Get list of device measurements.
+      operationId: getDeviceMeasurements
+      parameters:
+        - name: userId
+          in: path
+          description: UUID (e.g. User ID)
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: deviceId
+          in: path
+          description: UUID (e.g. User ID)
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Returns list of device measurements.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DeviceMeasurement"
+        400:
+          $ref: "#/components/responses/400BadRequest"
+        401:
+          $ref: "#/components/responses/401Unauthorized"
+        403:
+          $ref: "#/components/responses/403Forbidden"
+        404:
+          $ref: "#/components/responses/404NotFound"
+        422:
+          $ref: "#/components/responses/422ValidationException"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+      security:
+        - bearerAuth: [ ]
+
+  /api/v1/users/{id}/locations:
+    post:
+      tags:
+        - Location
+      summary: Create location.
+      description: Create location.
+      operationId: createLocation
+      parameters:
+        - $ref: "#/components/parameters/UUID"
+      requestBody:
+        description: Create location.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ManageLocation"
+        required: true
+      responses:
+        201:
+          description: Location successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Location"
+        400:
+          $ref: "#/components/responses/400BadRequest"
+        401:
+          $ref: "#/components/responses/401Unauthorized"
+        403:
+          $ref: "#/components/responses/403Forbidden"
+        404:
+          $ref: "#/components/responses/404NotFound"
+        422:
+          $ref: "#/components/responses/422ValidationException"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+      security:
+        - bearerAuth: [ ]
+    get:
+      tags:
+        - Location
+      summary: Get all user locations.
+      description: Get list of all user locations.
+      operationId: getLocations
+      parameters:
+        - $ref: "#/components/parameters/UUID"
+      responses:
+        201:
+          description: Returns list of all user locations.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Location"
+        400:
+          $ref: "#/components/responses/400BadRequest"
+        401:
+          $ref: "#/components/responses/401Unauthorized"
+        403:
+          $ref: "#/components/responses/403Forbidden"
+        404:
+          $ref: "#/components/responses/404NotFound"
+        422:
+          $ref: "#/components/responses/422ValidationException"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+      security:
+        - bearerAuth: [ ]
+
+  /api/v1/users/{userId}/locations/{locationId}:
+    put:
+      tags:
+        - Location
+      summary: Update location.
+      description: Update user location.
+      operationId: updateLocation
+      parameters:
+        - name: userId
+          in: path
+          description: UUID (e.g. User ID)
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: locationId
+          in: path
+          description: UUID (e.g. Location ID)
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Update location.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ManageLocation"
+        required: true
+      responses:
+        200:
+          description: Location successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Location"
+        400:
+          $ref: "#/components/responses/400BadRequest"
+        401:
+          $ref: "#/components/responses/401Unauthorized"
+        403:
+          $ref: "#/components/responses/403Forbidden"
+        404:
+          $ref: "#/components/responses/404NotFound"
+        422:
+          $ref: "#/components/responses/422ValidationException"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+      security:
+        - bearerAuth: [ ]
+    delete:
+      tags:
+        - Location
+      summary: Delete location.
+      description: Delete user location.
+      operationId: deleteLocation
+      parameters:
+        - name: userId
+          in: path
+          description: UUID (e.g. User ID)
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: locationId
+          in: path
+          description: UUID (e.g. Location ID)
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        204:
+          description: Location successfully deleted.
+        400:
+          $ref: "#/components/responses/400BadRequest"
+        401:
+          $ref: "#/components/responses/401Unauthorized"
+        403:
+          $ref: "#/components/responses/403Forbidden"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+      security:
+        - bearerAuth: [ ]
+
+components:
+  schemas:
+    ManageUser:
+      required:
+        - username
+        - email
+        - password
+      type: object
+      properties:
+        username:
+          type: string
+          examples: [ ivan ]
+        email:
+          type: string
+          format: email
+          examples: [ ivan@examples.com ]
+        password:
+          type: string
+          format: password
+          examples: [ P@ssw0rd ]
+    User:
+      required:
+        - id
+        - username
+        - email
+        - created_at
+        - updated_at
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          examples: [ e7848c4c-432f-42f7-9c98-cd45836be071 ]
+        username:
+          type: string
+          examples: [ ivan ]
+        email:
+          type: string
+          format: email
+          examples: [ ivan@examples.com ]
+        created_at:
+          type: string
+          format: date-time
+          examples: [ 2024-06-01T12:00:00Z ]
+        updated_at:
+          type: [ string, "null" ]
+          format: date-time
+          examples: [ 2024-06-01T12:00:00Z ]
+
+    UserLogin:
+      required:
+        - username
+        - password
+      type: object
+      properties:
+        username:
+          type: string
+          examples: [ ivan ]
+        password:
+          type: string
+          format: password
+          examples: [ P@ssw0rd ]
+    UserToken:
+      required:
+        - token
+      type: object
+      properties:
+        token:
+          type: string
+          examples: [ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... ]
+
+    ManageDevice:
+      required:
+        - name
+        - device_type_id
+        - location_id
+        - status
+      type: object
+      properties:
+        name:
+          type: string
+          examples: [ Living Room Thermostat ]
+        device_type_id:
+          type: string
+          format: uuid
+          examples: [ a1234567-89ab-cdef-0123-456789abcdef ]
+        location_id:
+          type: string
+          format: uuid
+          examples: [ b2345678-9abc-def0-1234-56789abcdef0 ]
+        status:
+          type: string
+          enum: [ ENABLED, DISABLED ]
+    Device:
+      required:
+        - id
+        - name
+        - owner_id
+        - device_type_id
+        - location_id
+        - status
+        - created_at
+        - updated_at
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          examples: [ d290f1ee-6c54-4b01-90e6-d701748f0851 ]
+        name:
+          type: string
+          examples: [ Living Room Thermostat ]
+        owner_id:
+          type: string
+          format: uuid
+          examples: [ e7848c4c-432f-42f7-9c98-cd45836be071 ]
+        device_type_id:
+          type: string
+          format: uuid
+          examples: [ a1234567-89ab-cdef-0123-456789abcdef ]
+        location_id:
+          type: string
+          format: uuid
+          examples: [ b2345678-9abc-def0-1234-56789abcdef0 ]
+        status:
+          type: string
+          enum: [ ENABLED, DISABLED ]
+        created_at:
+          type: string
+          format: date-time
+          examples: [ 2024-06-01T12:00:00Z ]
+        updated_at:
+          type: [ string, "null" ]
+          format: date-time
+          examples: [ 2024-06-01T12:00:00Z ]
+
+    ManageDeviceType:
+      required:
+        - name
+        - external_module_id
+      type: object
+      properties:
+        name:
+          type: string
+          examples: [ Thermostat ]
+        external_module_id:
+          type: string
+          format: uuid
+          examples: [ e7848c4c-432f-42f7-9c98-cd45836be071 ]
+    DeviceType:
+      required:
+        - id
+        - name
+        - external_module_id
+        - created_at
+        - updated_at
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          examples: [ d290f1ee-6c54-4b01-90e6-d701748f0851 ]
+        name:
+          type: string
+          examples: [ Living Room Thermostat ]
+        external_module_id:
+          type: string
+          format: uuid
+          examples: [ e7848c4c-432f-42f7-9c98-cd45836be071 ]
+        created_at:
+          type: string
+          format: date-time
+          examples: [ 2024-06-01T12:00:00Z ]
+        updated_at:
+          type: [ string, "null" ]
+          format: date-time
+          examples: [ 2024-06-01T12:00:00Z ]
+
+    DeviceMeasurement:
+      required:
+        - id
+        - device_id
+        - unit
+        - value
+        - created_at
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          examples: [ f47ac10b-58cc-4372-a567-0e02b2c3d479 ]
+        device_id:
+          type: string
+          format: uuid
+          examples: [ d290f1ee-6c54-4b01-90e6-d701748f0851 ]
+        unit:
+          type: string
+          examples: [ celsius ]
+        value:
+          type: number
+          format: float
+          examples: [ 23.5 ]
+        created_at:
+          type: string
+          format: date-time
+          examples: [ 2024-06-01T12:00:00Z ]
+
+    Command:
+      required:
+        - command
+      type: object
+      properties:
+        command:
+          type: string
+
+    ManageLocation:
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          type: string
+          examples: [ Living Room ]
+
+    Location:
+      required:
+        - id
+        - name
+        - owner_id
+        - created_at
+        - updated_at
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          examples: [ d290f1ee-6c54-4b01-90e6-d701748f0851 ]
+        name:
+          type: string
+          examples: [ Living Room ]
+        owner_id:
+          type: string
+          format: uuid
+          examples: [ e7848c4c-432f-42f7-9c98-cd45836be071 ]
+        created_at:
+          type: string
+          format: date-time
+          examples: [ 2024-06-01T12:00:00Z ]
+        updated_at:
+          type: [ string, "null" ]
+          format: date-time
+          examples: [ 2024-06-01T12:00:00Z ]
+
+    Error:
+      required:
+        - code
+        - message
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          examples: [ 1 ]
+        message:
+          type: [ string, "null" ]
+          examples: [ Error message ]
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  responses:
+    400BadRequest:
+      description: Bad request.
+    401Unauthorized:
+      description: Unauthorized.
+    403Forbidden:
+      description: Forbidden.
+    422ValidationException:
+      description: Validation exception.
+    404NotFound:
+      description: Not found.
+    UnexpectedError:
+      description: Unexpected error.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+  parameters:
+    UUID:
+      name: id
+      in: path
+      description: UUID (e.g. User ID)
+      required: true
+      schema:
+        type: string
+        format: uuid
